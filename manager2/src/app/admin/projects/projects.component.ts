@@ -147,7 +147,7 @@ export class ProjectsComponent implements OnInit {
             this.new_project.cpu = this.default_cpu;
         }
 
-        this.new_group.owner = this.new_project.owner;
+        this.new_group.owner = this.new_project.owners[0];
         this.new_group.name = "prj_" + tmp_project_id;
     }
 
@@ -155,8 +155,8 @@ export class ProjectsComponent implements OnInit {
     add_project() {
         this.notification = "";
 
-        if (!this.new_project.id || (this.config.project.enable_group && !this.new_project.group) || !this.new_project.owner || !this.new_project_expire) {
-            this.add_project_error_msg = "Project Id, group, owner and expiration date are required fields " + this.new_project.id + this.new_project.group + this.new_project.owner + this.new_project_expire;
+        if (!this.new_project.id || (this.config.project.enable_group && !this.new_project.group) || !this.new_project.owners || !this.new_project_expire) {
+            this.add_project_error_msg = "Project Id, group, owner and expiration date are required fields";
             return;
         }
         this.reset_msgs()
@@ -168,7 +168,7 @@ export class ProjectsComponent implements OnInit {
                 this.project_list();
                 this.pending_list(true);
 
-                this.userService.addToProject(this.new_project.owner, this.new_project.id).subscribe(
+                this.userService.addToProject(this.new_project.owners, this.new_project.id).subscribe(
                     resp => {
                         this.new_project = new Project();
                         this.new_project_expire = '';
@@ -188,8 +188,8 @@ export class ProjectsComponent implements OnInit {
 
     edit_project() {
 
-        if (!this.new_project.id || (this.config.project.enable_group && !this.new_project.group) || !this.new_project.owner || !this.new_project_expire) {
-            this.add_project_error_msg = "Project Id, group, owner and expiration date are required fields " + this.new_project.id + this.new_project.group + this.new_project.owner + this.new_project_expire;
+        if (!this.new_project.id || (this.config.project.enable_group && !this.new_project.group) || !this.new_project.owners || !this.new_project_expire) {
+            this.add_project_error_msg = "Project Id, group, owner and expiration date are required fields";
             return;
         }
 

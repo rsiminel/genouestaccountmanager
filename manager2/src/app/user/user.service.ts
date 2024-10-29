@@ -258,14 +258,14 @@ export class UserService {
             httpOptions)
     }
 
-    addToProject(owner: string, projectId: string) {
+    addToProject(owners: string[], projectId: string) {
         let httpOptions = {
             //headers: new HttpHeaders({
             //  'x-api-key': localStorage.getItem('my-api-key')
             //}),
         };
         return this.http.post(
-            environment.apiUrl + '/user/' + owner + '/project/' + projectId,
+            environment.apiUrl + '/user/' + owners[0] + '/project/' + projectId,
             {},
             httpOptions)
     }

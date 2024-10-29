@@ -201,7 +201,7 @@ export class ProjectComponent implements OnInit {
                 }
             }
         }
-        if (request_type === "remove" && project.owner === user_id) {
+        if (request_type === "remove" &&  user_id in project.owners) {
             this.request_err_msg = 'You cannot remove the project owner';
             return;
         }

@@ -19,10 +19,10 @@
         <form aria-label="project edition form" role="form" class="user-form form-horizontal form-register">
           <div class="form-group row">
             <div class="col-sm-2">
-              <label for="update_project_owner">Owner</label>
-              <select id="update_project_owner" [ngModelOptions]="{standalone: true}" [(ngModel)]="project.owner" class="form-control">
+              <label for="update_project_owners">Owners</label>
+              <select id="update_project_owners" [ngModelOptions]="{standalone: true}" [(ngModel)]="project.owners[-1]" class="form-control">
                 <option *ngFor="let user_o of users" [ngValue]="user_o.uid">{{user_o.uid}}</option>
-                </select>
+              </select>
             </div>
             <div class="col-sm-2" *ngIf="!config.project || config.project.enable_group">
               <label for="update_project_group">Group</label>
