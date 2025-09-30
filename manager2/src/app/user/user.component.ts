@@ -126,6 +126,8 @@ export class UserComponent implements OnInit {
     timeoutId: any;
     note: string;
     err_note: string;
+    emailBeforeChange: string;
+    showEmailConfirmModal: boolean;
 
     STATUS_PENDING_EMAIL = 'Waiting for email approval';
     STATUS_PENDING_APPROVAL = 'Waiting for admin approval';
@@ -140,7 +142,7 @@ export class UserComponent implements OnInit {
     plugin_data: any;
     panel: number = 0;
 
-    // Password mngt
+    // Password management
     update_passwd: string;
     password1: string = '';
     password2: string = '';
@@ -163,7 +165,6 @@ export class UserComponent implements OnInit {
     add_to_project_msg: string;
     add_to_project_error_msg: string;
     add_to_project_grp_msg: string;
-    request_mngt_error_msg: string;
     remove_from_project_msg: string;
     remove_from_project_error_msg: string;
     ssh_message: string;
@@ -172,8 +173,8 @@ export class UserComponent implements OnInit {
     new_key_message: string;
     add_group_msg: string;
     rm_group_msg: string;
-    webmsg: string;
-    rmwebmsg: string;
+    web_msg: string;
+    rm_web_msg: string;
     del_msg: string;
     notify_subject: string;
     notify_message: string;
@@ -488,13 +489,13 @@ export class UserComponent implements OnInit {
         this.website.owner = this.user.uid;
         this.websiteService.add(this.website).subscribe(
             (resp) => {
-                this.rmwebmsg = '';
+                this.rm_web_msg = '';
                 this.websites.push(this.website);
                 this.website = new Website('', '', '', this.user.uid);
                 //this.web_list();
             },
             (err) => {
-                this.rmwebmsg = err.error.message;
+                this.rm_web_msg = err.error.message;
                 console.log('failed to add web site');
             }
         );
@@ -504,11 +505,11 @@ export class UserComponent implements OnInit {
             if (ws.name == siteName) {
                 this.websiteService.remove(ws).subscribe(
                     (resp) => {
-                        this.rmwebmsg = '';
+                        this.rm_web_msg = '';
                         this.web_list();
                     },
                     (err) => {
-                        this.rmwebmsg = err.error.message;
+                        this.rm_web_msg = err.error.message;
                         console.log('failed to delete web site', err);
                     }
                 );
@@ -517,25 +518,25 @@ export class UserComponent implements OnInit {
     }
 
     add_secondary_group() {
-        let sgroup = this.user.newgroup;
-        if (sgroup.trim() != '') {
-            this.userService.addGroup(this.user.uid, sgroup).subscribe(
+        let s_group = this.user.newgroup;
+        if (s_group.trim() != '') {
+            this.userService.addGroup(this.user.uid, s_group).subscribe(
                 (resp) => {
                     this.add_group_msg = resp['message'];
-                    this.user.secondarygroups.push(sgroup);
+                    this.user.secondarygroups.push(s_group);
                 },
                 (err) => console.log('failed to add secondary group')
             );
         }
     }
 
-    delete_secondary_group(sgroup) {
-        this.userService.deleteGroup(this.user.uid, sgroup).subscribe(
+    delete_secondary_group(s_group) {
+        this.userService.deleteGroup(this.user.uid, s_group).subscribe(
             (resp) => {
                 this.rm_group_msg = resp['message'];
                 let tmp_groups: string[] = [];
                 for (var t = 0; t < this.user.secondarygroups.length; t++) {
-                    if (this.user.secondarygroups[t] != sgroup) {
+                    if (this.user.secondarygroups[t] != s_group) {
                         tmp_groups.push(this.user.secondarygroups[t]);
                     }
                 }
@@ -716,8 +717,20 @@ export class UserComponent implements OnInit {
     //         this.wrong_confirm_passwd = "Password must have 10 characters minimum";
     //         return;
     //     }
-
     // }
+
+    onEmailChange() {
+        this.showEmailConfirmModal = this.emailBeforeChange !== this.user.email;
+    }
+
+    confirmEmailChange() {
+        this.showEmailConfirmModal = false;
+    }
+
+    cancelEmailChange() {
+        this.user.email = this.emailBeforeChange;
+        this.showEmailConfirmModal = false;
+    }
 
     update_info() {
         this.update_msg = '';
@@ -840,7 +853,6 @@ export class UserComponent implements OnInit {
         this.add_to_project_msg = '';
         this.add_to_project_error_msg = '';
         this.add_to_project_grp_msg = '';
-        this.request_mngt_error_msg = '';
         let new_project = this.user.newproject;
         for (var i = 0; i < this.user_projects.length; i++) {
             if (new_project.id === this.user_projects[i].id) {

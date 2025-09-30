@@ -93,7 +93,7 @@
                 <div class="form-group row">
                   <label for="email" class="col-4 col-form-label label-control">Email</label>
                   <div class="col-8">
-                    <input type="email" id="email" [ngModelOptions]="{ standalone: true }" [(ngModel)]="user.email" class="form-control" />
+                    <input type="email" id="email" [ngModelOptions]="{ standalone: true }" [(ngModel)]="user.email" class="form-control" (focus)="emailBeforeChange = user.email" (change)="onEmailChange()" />
                   </div>
                 </div>
                 <div *ngIf="session_user.is_admin" class="form-group row">
@@ -601,12 +601,30 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Email change confirmation modal -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show': showEmailConfirmModal }" [style.display]="showEmailConfirmModal ? 'block' : 'none'" style="z-index: 2000;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Email Change</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to change the email on record?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="p-button p-button-sm p-button-primary" (click)="confirmEmailChange()">Yes</button>
+        <button type="button" class="p-button p-button-sm p-button-secondary" (click)="cancelEmailChange()">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Group Creation Modal -->
 <div class="modal" style="z-index: 1500" id="group_creation" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="panel-title">Group creation</h3>
+        <h3 class="panel-title">Group Creation</h3>
       </div>
       <div class="modal-body">
         <form role="form" class="user-form form-inline justify-content-center">
