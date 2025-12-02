@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { User, UserService } from 'src/app/user/user.service';
 
 import { Table } from 'primeng/table';
+import { get } from 'jquery';
 
 @Pipe({
     name: 'statusFilter',
@@ -35,11 +36,21 @@ export class UsersComponent implements OnInit {
     STATUS_ACTIVE = 'Active';
     STATUS_EXPIRED = 'Expired';
 
-    users: User[];
     pending_email_users: User[] = [];
     pending_approval_users: User[] = [];
     active_users: User[] = [];
     expired_users: User[] = [];
+    whitelist: string[] = [];
+    new_domain: string = '';
+    rm_domain: string = '';
+
+    pending_email_visible: boolean = true;
+    pending_admin_visible: boolean = true;
+    active_visible: boolean = true;
+    expired_visible: boolean = true;
+    whitelist_visible: boolean = true;
+    whitelist_msg: string = '';
+    whitelist_err_msg: string = '';
 
     constructor(private userService: UserService) {}
 
@@ -48,7 +59,6 @@ export class UsersComponent implements OnInit {
     ngOnInit() {
         this.userService.list().subscribe(
             (resp) => {
-                //this.users = resp;
                 let pendingEmail: User[] = [];
                 let pendingApproval: User[] = [];
                 let active: User[] = [];
@@ -70,6 +80,48 @@ export class UsersComponent implements OnInit {
                 this.expired_users = expired;
             },
             (err) => console.log('failed to get users')
+        );
+        this.get_whitelist();
+    }
+
+    get_whitelist() {
+        this.userService.get_whitelist().subscribe(
+            resp => this.whitelist = resp,
+            err => this.whitelist_err_msg = err.error.message
+        );
+    }
+
+    add_domain(domain: string) {
+        this.whitelist_msg = '';
+        this.whitelist_err_msg = '';
+        if (domain.length == 0) {
+            this.whitelist_err_msg = 'Domain name cannot be empty';
+            return;
+        }
+        this.userService.add_whitelist_domain(domain).subscribe(
+            (resp) => {
+                this.whitelist_msg = resp['message'];
+                this.new_domain = '';
+                this.get_whitelist();
+            },
+            (err) => this.whitelist_err_msg = err.error.message
+        );
+    }
+
+    remove_domain(domain: string) {
+        this.whitelist_msg = '';
+        this.whitelist_err_msg = '';
+        if (domain.length == 0) {
+            this.whitelist_err_msg = 'No domain selected to remove';
+            return;
+        }
+        this.userService.remove_whitelist_domain(domain).subscribe(
+            (resp) => {
+                this.whitelist_msg = resp['message'];
+                this.rm_domain = '';
+                this.get_whitelist();
+            },
+            (err) => this.whitelist_err_msg = err.error.message
         );
     }
 }

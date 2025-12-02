@@ -1576,6 +1576,93 @@ router.put('/user/:id', async function (req, res) {
     }
 });
 
+router.get('/whitelist', async function (req, res) {
+    if (!req.locals.logInfo.is_logged) {
+        return res.status(401).send({ message: 'Not authorized' });
+    }
+    try {
+        let whitelist = await dbsrv.mongo_whitelist().find({}).toArray();
+        return res.send(whitelist);
+    } catch (e) {
+        logger.error(e);
+        if (e.code && e.message) {
+            return res.status(e.code).send({ message: e.message });
+        } else {
+            return res.status(500).send({ message: 'Server Error, contact admin' });
+        }
+    }
+});
+
+router.post('/whitelist/add/:domain', async function (req, res) {
+    if (!req.locals.logInfo.is_logged) {
+        return res.status(401).send({ message: 'Not authorized' });
+    }
+    if (!sansrv.sanitizeAll([req.params.domain])) {
+        return res.status(403).send({ message: 'Invalid parameters' });
+    }
+    let session_user = null;
+    let isadmin = false;
+    try {
+        session_user = await dbsrv.mongo_users().findOne({ _id: req.locals.logInfo.id });
+        isadmin = await rolsrv.is_admin(session_user);
+    } catch (e) {
+        logger.error(e);
+        return res.status(404).send({ message: 'User session not found' });
+    }
+    if (!session_user) {
+        return res.status(404).send({ message: 'User session not found' });
+    }
+    if (!isadmin) {
+        return res.status(401).send({ message: 'Not authorized' });
+    }
+    try {
+        await dbsrv.mongo_whitelist().insertOne({ domain: req.params.domain });
+    } catch (e) {
+        logger.error(e);
+        if (e.code && e.message) {
+            return res.status(e.code).send({ message: e.message });
+        } else {
+            return res.status(500).send({ message: 'Server Error, contact admin' });
+        }
+    }
+    return res.send({ message: 'Domain added to whitelist' });
+});
+
+router.post('/whitelist/remove/:domain', async function (req, res) {
+    if (!req.locals.logInfo.is_logged) {
+        return res.status(401).send({ message: 'Not authorized' });
+    }
+    if (!sansrv.sanitizeAll([req.params.domain])) {
+        return res.status(403).send({ message: 'Invalid parameters' });
+    }
+    let session_user = null;
+    let isadmin = false;
+    try {
+        session_user = await dbsrv.mongo_users().findOne({ _id: req.locals.logInfo.id });
+        isadmin = await rolsrv.is_admin(session_user);
+    } catch (e) {
+        logger.error(e);
+        return res.status(404).send({ message: 'User session not found' });
+    }
+    if (!session_user) {
+        return res.status(404).send({ message: 'User session not found' });
+    }
+    if (!isadmin) {
+        return res.status(401).send({ message: 'Not authorized' });
+    }
+    try {
+        await dbsrv.mongo_whitelist().deleteOne({ domain: req.params.domain });
+    } catch (e) {
+        logger.error(e);
+        if (e.code && e.message) {
+            return res.status(e.code).send({ message: e.message });
+        } else {
+            return res.status(500).send({ message: 'Server Error, contact admin' });
+        }
+    }
+    return res.send({ message: 'Domain removed from whitelist' });
+});
+
 router.post('/user/:id/project/:project', async function (req, res) {
     if (!req.locals.logInfo.is_logged) {
         return res.status(401).send({ message: 'Not authorized' });

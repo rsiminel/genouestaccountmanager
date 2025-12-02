@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-md-6">
     <div class="card bg-light">
-      <div class="card-header bg-warning">
+      <div class="card-header bg-warning" (click)="pending_email_visible = !pending_email_visible" style="cursor: pointer;">
         <h3>Pending email approval [{{ pending_email_users.length }}]</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" *ngIf="pending_email_visible">
         <div class="table-responsive table-striped">
           <p-table #dt1 [value]="pending_email_users" [resizableColumns]="true" [autoLayout]="true" [tableStyle]="{ 'text-align': 'center' }" sortMode="multiple">
             <ng-template pTemplate="header">
@@ -33,10 +33,10 @@
 
   <div class="col-md-6">
     <div class="card bg-light">
-      <div class="card-header bg-warning">
+      <div class="card-header bg-warning" (click)="pending_admin_visible = !pending_admin_visible" style="cursor: pointer;">
         <h3>Pending admin approval [{{ pending_approval_users.length }}]</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" *ngIf="pending_admin_visible">
         <div class="table-responsive table-striped">
           <p-table #dt2 [value]="pending_approval_users" [resizableColumns]="true" [autoLayout]="true">
             <ng-template pTemplate="header">
@@ -68,10 +68,10 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="card bg-light">
-      <div class="card-header">
+      <div class="card-header" (click)="active_visible = !active_visible" style="cursor: pointer;">
         <h3>Active [{{ active_users.length }}]</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" *ngIf="active_visible">
         <div class="table-responsive table-striped">
           <p-table #dt3 [value]="active_users" [resizableColumns]="true" [autoLayout]="true" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50]" [globalFilterFields]="['name', 'uid', 'email', 'uidnumber', 'why', 'firstname', 'lastname']" [filterDelay]="0">
             <ng-template pTemplate="caption">
@@ -113,10 +113,10 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="card bg-light">
-      <div class="card-header bg-danger">
+      <div class="card-header bg-danger" (click)="expired_visible = !expired_visible" style="cursor: pointer;">
         <h3>Expired [{{ expired_users.length }}]</h3>
       </div>
-      <div class="card-body">
+      <div class="card-body" *ngIf="expired_visible">
         <div class="table-responsive table-striped">
           <p-table #dt4 [value]="expired_users" [resizableColumns]="true" [autoLayout]="true" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 25, 50]" [globalFilterFields]="['name', 'uid', 'email', 'uidnumber']" [filterDelay]="0">
             <ng-template pTemplate="caption">
@@ -151,5 +151,41 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="card bg-light">
+  <div class="card-header" (click)="whitelist_visible = !whitelist_visible" style="cursor: pointer;">
+    <h3>Email Domain Whitelist</h3>
+  </div>
+  <div class="card-body" *ngIf="whitelist_visible">
+    <div class="alert alert-danger" *ngIf="whitelist_err_msg">{{whitelist_err_msg}}</div>
+    <div *ngIf="whitelist_msg" class="alert alert-info">{{whitelist_msg}}</div>
+    <form role="form" class="user-form form-horizontal">
+      <div class="form-group row">
+        <div class="col-sm-3">
+          <label for="new_domain">New allowed email domain</label>
+          <input placeholder="New domain" id="add_domain" type="text" [ngModelOptions]="{ standalone: true }" [(ngModel)]="new_domain" class="form-control" />
+        </div>
+        <div class="col-sm-3">
+          <label style="opacity: 0;">Add new allowed email domain</label>
+          <button type="button" class="p-button p-button-sm p-button-info" (click)="add_domain(new_domain)">Add Domain</button>
+        </div>
+        <div class="col-sm-3">
+          <label for="rm_domain">Remove email domain from whitelist</label>
+          <select id="rm_domain"  [ngModelOptions]="{standalone: true}" [(ngModel)]="rm_domain" class="form-control">
+            <option *ngFor="let domain of whitelist" [value]="domain">{{ domain }}</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <label style="opacity: 0;">Remove email domain</label>
+          <button type="button" class="p-button p-button-sm p-button-danger"(click)="remove_domain(rm_domain)">Remove Domain</button>
+        </div>
+      </div>
+    </form>
+    <h6>Whitelist :</h6>
+    <ul>
+      <li *ngFor="let domain of whitelist">{{ domain }}</li>
+    </ul>
   </div>
 </div>

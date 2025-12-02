@@ -306,7 +306,7 @@ export class UserService {
             {responseType: 'text'})
     }
 
-    getNewSSHKey(id: string) {
+    getNewSSHKey(id: string): Observable<Object> {
         let httpOptions = {
         };
         return this.http.get(
@@ -347,7 +347,7 @@ export class UserService {
             httpOptions)
     }
 
-    isSubscribed(id: string) {
+    isSubscribed(id: string): Observable<Object> {
         //let user = this.authService.profile;
         let httpOptions = {
             // headers: new HttpHeaders({
@@ -408,6 +408,44 @@ export class UserService {
                 return this.mapToUser(item);
             });
         }));
+    }
+
+    get_whitelist(): Observable<string[]> {
+        let httpOptions = {
+            //headers: new HttpHeaders({
+            //  'x-api-key': localStorage.getItem('my-api-key')
+            //}),
+        };
+        return this.http.get(
+            environment.apiUrl + '/whitelist',
+            httpOptions
+        ).pipe(map((response: any[]) => {
+            return response.map(item => item.toString());
+        }))
+    }
+
+    add_whitelist_domain(domain: string) {
+        let httpOptions = {
+            //headers: new HttpHeaders({
+            //  'x-api-key': localStorage.getItem('my-api-key')
+            //}),
+        };
+        return this.http.post(
+            environment.apiUrl + '/whitelist/add/' + domain,
+            httpOptions
+        )
+    }
+
+    remove_whitelist_domain(domain: string) {
+        let httpOptions = {
+            //headers: new HttpHeaders({
+            //  'x-api-key': localStorage.getItem('my-api-key')
+            //}),
+        };
+        return this.http.post(
+            environment.apiUrl + '/whitelist/remove/' + domain,
+            httpOptions
+        )
     }
 
     removeFromProject(userId: string, projectId: string) {

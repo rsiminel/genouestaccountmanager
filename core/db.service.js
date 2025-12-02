@@ -20,6 +20,7 @@ var mongo_projects = null;
 var mongo_tags = null;
 var mongo_pending_projects = null;
 var mongo_pending_databases = null;
+var mongo_whitelist = null;
 
 var mongo_connect = async function () {
     let url = CONFIG.mongo.url;
@@ -46,6 +47,7 @@ var mongo_connect = async function () {
     mongo_tags = mongodb.collection('tags');
     mongo_pending_projects = mongodb.collection('pending_projects');
     mongo_pending_databases = mongodb.collection('pending_databases');
+    mongo_whitelist = mongodb.collection('whitelist');
 };
 // mongo_connect();
 
@@ -102,4 +104,7 @@ exports.mongo_others = function (coll) {
 };
 exports.mongo_pending_databases = function () {
     return mongo_pending_databases;
+};
+exports.mongo_whitelist = function () {
+    return mongo_whitelist;
 };
