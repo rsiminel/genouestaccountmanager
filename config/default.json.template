@@ -268,6 +268,12 @@
       "<br/>",
       "<hr>"
     ],
+    "email_change": [
+      "User #UID# has changed their email address from #OLDEMAIL# to #NEWEMAIL#."
+    ],
+    "email_change_html": [
+      "<p>User #UID# has changed their email address from #OLDEMAIL# to #NEWEMAIL#.</p>"
+    ],
     "expiration": [
       "Your account will expire at #EXPIRE#, if you wish to extend the duration of your account, please go to the following URL:",
       "#LINK#",

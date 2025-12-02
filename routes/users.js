@@ -1478,6 +1478,30 @@ router.put('/user/:id', async function (req, res) {
         user.home = usrsrv.get_user_home(user);
     }
 
+    if (req.body.email) {
+        const email_domain_whitelisted = await dbsrv.mongo_whitelist().find({ domain: user.email.split('@')[1] }).count();
+        if (!email_domain_whitelisted) {
+            try {
+                const msg_destinations = [CONFIG.general.accounts];
+                await maisrv.send_notif_mail(
+                    {
+                        name: 'email_change',
+                        destinations: msg_destinations,
+                        subject: 'email change'
+                    },
+                    {
+                        '#UID#': user.uid,
+                        '#OLDMAIL#': user.oldemail,
+                        '#NEWMAIL#': user.email,
+                    }
+                );
+            } catch (error) {
+                logger.error(error);
+                return res.status(500).send({ message: 'message error', error: error });
+            }
+        }
+    }
+
     try {
         await plgsrv.run_plugins('update', user.uid, user, session_user.uid);
     } catch (err) {

@@ -34,6 +34,7 @@
   </div>
 </div>
 
+<!-- Success, Warning and Danger Messages -->
 <div *ngFor="let template of plugins">
   <div *ngIf="plugin_data[template.name] && plugin_data[template.name].warnings && plugin_data[template.name].warnings.length > 0" class="alert alert-warning">
     <div *ngFor="let warning of plugin_data[template.name].warnings"><strong>Warning!</strong> {{ warning }}</div>
@@ -42,7 +43,6 @@
     <div *ngFor="let error of plugin_data[template.name].errors"><strong>Alert!</strong> {{ error }}</div>
   </div>
 </div>
-
 <div class="alert alert-success" role="alert" *ngIf="msg">{{ msg }}</div>
 <div class="alert alert-warning" role="alert" *ngIf="del_msg">{{ del_msg }}</div>
 <div class="alert alert-danger" role="alert" *ngIf="err_msg">{{ err_msg }}</div>
@@ -601,7 +601,7 @@
   </div>
 </div>
 
-<!-- Email change confirmation modal -->
+<!-- Email Change Confirmation Modal -->
 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'show': showEmailConfirmModal }" [style.display]="showEmailConfirmModal ? 'block' : 'none'" style="z-index: 2000;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
