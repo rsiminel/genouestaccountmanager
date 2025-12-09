@@ -9,7 +9,7 @@
         <button class="btn" (click)="subscribe()"><small class="oi oi-envelope-open glyphicon glyphicon-envelope" title="The user is not subscribed to the newsletter" style="color: red"></small> subscribe</button>
       </div>
       <div *ngIf="user && user.created_at">
-        <small>Created at : {{ user.created_at | date }}</small>
+        <small>Created at: {{ user.created_at | date }}</small>
       </div>
       <div *ngIf="user && user.expiration">
         <small>Expires: {{ user.expiration | date }}</small>
