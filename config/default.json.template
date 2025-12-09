@@ -309,13 +309,13 @@
       "<i>#MSG#</i>"
     ],
     "user_deletion": [
-        "Your account #UID# have been deleted by #USER#",
+        "Your account #UID# has been deleted by #USER#",
         "Because:",
         "",
         "#MSG#"
     ],
     "user_deletion_html": [
-      "<p>Your account #UID# have been deleted by #USER#</p>",
+      "<p>Your account #UID# has been deleted by #USER#</p>",
       "<p>Because:</p>",
       "<i>#MSG#</i>"
     ],

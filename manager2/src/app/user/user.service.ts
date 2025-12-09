@@ -425,6 +425,7 @@ export class UserService {
     }
 
     add_whitelist_domain(domain: string) {
+        console.log('Helloo!');
         let httpOptions = {
             //headers: new HttpHeaders({
             //  'x-api-key': localStorage.getItem('my-api-key')
@@ -457,7 +458,8 @@ export class UserService {
         };
         return this.http.delete(
             environment.apiUrl + '/user/' + userId + '/project/' + projectId,
-            httpOptions)
+            httpOptions
+        )
     }
 
     register(userId: string, user: User) {
@@ -467,7 +469,8 @@ export class UserService {
         return this.http.post(
             environment.apiUrl + '/user/' + userId,
             user,
-            httpOptions)
+            httpOptions
+        )
     }
 
     extend(userId: string, regKey: number) {
@@ -478,7 +481,8 @@ export class UserService {
             })
         }
         return this.http.get(
-            environment.apiUrl + '/user/' + userId + '/renew/' + regKey, httpOptions
+            environment.apiUrl + '/user/' + userId + '/renew/' + regKey,
+            httpOptions
         )
     }
 
@@ -504,6 +508,7 @@ export class UserService {
         };
         return this.http.get(
             environment.apiUrl + '/user/' + userId + '/unlock',
-            httpOptions)
+            httpOptions
+        )
     }
 }

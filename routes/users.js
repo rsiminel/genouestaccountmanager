@@ -29,8 +29,8 @@ var STATUS_PENDING_APPROVAL = 'Waiting for admin approval';
 var STATUS_ACTIVE = 'Active';
 var STATUS_EXPIRED = 'Expired';
 
-let day_time = 1000 * 60 * 60 * 24;
-let duration_list = CONFIG.duration;
+const day_time = 1000 * 60 * 60 * 24;
+const duration_list = CONFIG.duration;
 //const runningEnv = process.env.NODE_ENV || 'prod';
 
 const grpsrv = require('../core/group.service.js');
@@ -1491,8 +1491,8 @@ router.put('/user/:id', async function (req, res) {
                     },
                     {
                         '#UID#': user.uid,
-                        '#OLDMAIL#': user.oldemail,
-                        '#NEWMAIL#': user.email,
+                        '#OLDEMAIL#': user.oldemail,
+                        '#NEWEMAIL#': user.email,
                     }
                 );
             } catch (error) {
@@ -1601,6 +1601,7 @@ router.put('/user/:id', async function (req, res) {
 });
 
 router.get('/whitelist', async function (req, res) {
+    logger.info('Hell0!');
     if (!req.locals.logInfo.is_logged) {
         return res.status(401).send({ message: 'Not authorized' });
     }
@@ -1618,6 +1619,7 @@ router.get('/whitelist', async function (req, res) {
 });
 
 router.post('/whitelist/add/:domain', async function (req, res) {
+    logger.info('Hell1!');
     if (!req.locals.logInfo.is_logged) {
         return res.status(401).send({ message: 'Not authorized' });
     }
